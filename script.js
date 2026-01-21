@@ -1,23 +1,22 @@
 const INITIAL_CAPITAL = 300000;
-const MAX_FUNDING   = 300000;
-const MIN_INVEST    = 2000;
-const LOCAL_KEY     = 'loggedCompanySharkTank';
+const MIN_INVEST      = 2000;
+const LOCAL_KEY       = 'loggedCompanySharkTank';
 
 const companies = [
-  { name: "Prestige Motors", members: ["Feim"], logo: "logos/prestige.png" },
-  { name: "IT Solutions", members: ["Berkay"], logo: "logos/itsolutions.png" },
-  { name: "Silent Cafe", members: ["Patrik"], logo: "logos/silentcafe.png" },
-  { name: "StudieRoom", members: ["Georg"], logo: "logos/studieroom.png" },
-  { name: "Mobility Hub", members: ["Ksawa"], logo: "logos/mobilityhub.png" },
-  { name: "Fashion Drive", members: ["Wessel"], logo: "logos/fashiondrive.png" },
-  { name: "M8erbahn", members: ["Boris"], logo: "logos/m8erbahn.png" },
-  { name: "ColorFit", members: ["David", "Benjo"], logo: "logos/colorfit.png" },
-  { name: "nutriGo", members: ["Sascha"], logo: "logos/nutrigo.png" },
-  { name: "Code4Local", members: ["Djole"], logo: "logos/code4local.png" },
-  { name: "Bon Voyage", members: ["Adrian"], logo: "logos/bonvoyage.png" },
-  { name: "AssetSecure", members: ["Martin", "Flo"], logo: "logos/assetsecure.png" },
-  { name: "GreenBox", members: ["Samy", "Dawid"], logo: "logos/greenbox.png" },
-  { name: "HighTech", members: ["Eray"], logo: "logos/hightech.png" }
+  { name: "Prestige Motors", members: ["Feim"],     logo: "logos/prestige.png" },
+  { name: "IT Solutions",    members: ["Berkay"],   logo: "logos/itsolutions.png" },
+  { name: "Silent Cafe",     members: ["Patrik"],   logo: "logos/silentcafe.png" },
+  { name: "StudieRoom",      members: ["Georg"],    logo: "logos/studieroom.png" },
+  { name: "Mobility Hub",    members: ["Ksawa"],    logo: "logos/mobilityhub.png" },
+  { name: "Fashion Drive",   members: ["Wessel"],   logo: "logos/fashiondrive.png" },
+  { name: "M8erbahn",        members: ["Boris"],    logo: "logos/m8erbahn.png" },
+  { name: "ColorFit",        members: ["David", "Benjo"], logo: "logos/colorfit.png" },
+  { name: "nutriGo",         members: ["Sascha"],   logo: "logos/nutrigo.png" },
+  { name: "Code4Local",      members: ["Djole"],    logo: "logos/code4local.png" },
+  { name: "Bon Voyage",      members: ["Adrian"],   logo: "logos/bonvoyage.png" },
+  { name: "AssetSecure",     members: ["Martin", "Flo"], logo: "logos/assetsecure.png" },
+  { name: "GreenBox",        members: ["Samy", "Dawid"], logo: "logos/greenbox.png" },
+  { name: "HighTech",        members: ["Eray"],     logo: "logos/hightech.png" }
 ];
 
 let transactions = [];
@@ -152,11 +151,7 @@ function getTotalMarket() {
 }
 
 function getMaxPossible() {
-  return companies.length * MAX_FUNDING;
-}
-
-function isFullyFunded(name) {
-  return getFunding(name) >= MAX_FUNDING;
+  return companies.length * 300000; // nur noch für Statistik / Anzeige
 }
 
 function renderCompanies() {
@@ -167,7 +162,6 @@ function renderCompanies() {
     const totalFunding = getFunding(co.name);
     const myInvestment = getMyInvestmentInCompany(co.name);
     const myPercent = Math.min(100, (myInvestment / INITIAL_CAPITAL) * 100);
-    const fully = isFullyFunded(co.name);
     const isSelf = co.name === loggedCompany;
 
     let barColor = '#475569';
@@ -176,7 +170,6 @@ function renderCompanies() {
 
     const card = document.createElement('div');
     card.className = 'company-card';
-    if (fully) card.classList.add('fully-funded');
 
     card.innerHTML = `
       <img src="${co.logo}" alt="${co.name}" class="company-logo">
@@ -196,13 +189,15 @@ function renderCompanies() {
           <div class="progress-fill" style="width:${myPercent}%; background:${barColor};"></div>
         </div>
 
+        <div class="funding-info" style="margin-top:1rem; font-size:0.9rem; color:#94a3b8;">
+          Gesamt finanziert: ${totalFunding.toLocaleString()} €
+        </div>
+
         <button class="invest-button"
-                ${fully || isSelf || getRemaining(loggedCompany) < MIN_INVEST ? 'disabled' : ''}>
+                ${isSelf || getRemaining(loggedCompany) < MIN_INVEST ? 'disabled' : ''}>
           💸 Investieren
         </button>
       </div>
-
-      <div class="status">${fully ? '🔴' : '🟢'}</div>
       ${isSelf ? '<div class="self-badge">👤 Das bist du</div>' : ''}
     `;
 
@@ -226,7 +221,7 @@ function renderRanking() {
   ol.innerHTML = '';
 
   const ranked = [...companies]
-    .map(co => ({ ...co, invested: getFunding(co.name) }))  // ← Korrektur: erhaltenes Kapital!
+    .map(co => ({ ...co, invested: getFunding(co.name) }))   // ← jetzt korrekt: erhaltenes Kapital
     .sort((a, b) => b.invested - a.invested);
 
   ranked.forEach((co, i) => {
@@ -330,32 +325,17 @@ document.getElementById('btn-confirm').addEventListener('click', () => {
   const { ref, get, push, serverTimestamp } = window.firebaseRefs;
   const db = window.firebaseDB;
 
-  get(ref(db, 'investments')).then(snapshot => {
-    let serverTx = [];
-    if (snapshot.exists()) {
-      snapshot.forEach(child => serverTx.push(child.val()));
-    }
-    const currentFunding = serverTx
-      .filter(t => t.to === currentTarget)
-      .reduce((sum, t) => sum + (t.amount || 0), 0);
+  // Kein Limit-Check mehr – Firma darf beliebig viel bekommen
 
-    if (currentFunding + amount > MAX_FUNDING) {
-      return showError(`Firma kann maximal ${MAX_FUNDING.toLocaleString()} € erhalten (aktuell ${currentFunding.toLocaleString()} €).`);
-    }
-
-    push(ref(db, 'investments'), {
-      from,
-      to: currentTarget,
-      amount,
-      ts: serverTimestamp()
-    })
-    .then(() => closeModal())
-    .catch(err => {
-      showError('Fehler beim Speichern der Investition.');
-      console.error(err);
-    });
-  }).catch(err => {
-    showError('Fehler beim Prüfen der aktuellen Daten.');
+  push(ref(db, 'investments'), {
+    from,
+    to: currentTarget,
+    amount,
+    ts: serverTimestamp()
+  })
+  .then(() => closeModal())
+  .catch(err => {
+    showError('Fehler beim Speichern der Investition.');
     console.error(err);
   });
 });
