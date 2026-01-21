@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🦈 Shark Tank</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Login Screen -->
+  <div id="login-screen" class="login-container">
+    <h1>🦈 Shark Tank – Login</h1>
+    <label for="company-select">Unternehmen wählen:</label>
+    <select id="company-select">
+      <option value="">— Bitte auswählen —</option>
+    </select>
+
+    <label for="pin-input">4-stelliger PIN:</label>
+    <input type="password" id="pin-input" maxlength="4" pattern="\d{4}" placeholder="z. B. 1234">
+
+    <button id="login-button">Einloggen</button>
+    <p id="login-error" class="error-message"></p>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashboard" style="display:none;">
+    <header>
+      <h1>🦈 Shark Tank – <span id="logged-company"></span></h1>
+      <button id="logout-button">🚪 Logout</button>
+      <button id="freeze-button" style="margin-top:10px; display:none;">
+        ⛔ Investments stoppen
+      </button>
+      <div class="stats-bar">
+        <div class="user-capital">
+          💼 Dein verfügbares Kapital: <strong id="user-remaining">300.000 €</strong>
+        </div>
+        <div class="total-market">
+          💰 Gesamt investiert: <span id="total-invested">0 €</span> 
+          <small>/ max. <span id="max-possible"></span> €</small>
+        </div>
+        <div class="last-investment" id="last-investment-display">
+          🔥 Letzte Investition: —
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="companies-section">
+        <h2>Unternehmen</h2>
+        <div id="company-grid"></div>
+      </section>
+
+      <aside class="sidebar">
+        <div class="ranking-box">
+          <h2>🏆 Ranking (nach erhaltenem Kapital)</h2>
+          <ol id="ranking-list"></ol>
+        </div>
+
+        <div class="log-box">
+          <h2>📊 Investitions-Log</h2>
+          <ul id="investment-log"></ul>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- Investment Modal -->
+  <div id="invest-modal" class="modal" style="display:none">
+    <div class="modal-content">
+      <h2>💸 Investieren in <span id="modal-target-company"></span></h2>
+
+      <div class="investor-info">
+        Investor: <strong id="modal-investor"></strong>
+      </div>
+
+      <div class="remaining-info">
+        💼 Verbleibendes Kapital: <strong id="modal-remaining">— €</strong>
+      </div>
+
+      <label>Betrag (€) – min. 2.000 €</label>
+      <input type="number" id="modal-amount" min="2000" step="100" placeholder="z. B. 25000">
+
+      <div class="error-message" id="modal-error"></div>
+
+      <div class="modal-buttons">
+        <button id="btn-cancel">Abbrechen</button>
+        <button id="btn-confirm">Investition tätigen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK – modular (v12.8.0) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+    import { getDatabase, ref, get, push, onValue, serverTimestamp, set } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCjPeWga8l2j3MYXicuWj1nMgXSITVlPQM",
+      authDomain: "shark-tank-5caif.firebaseapp.com",
+      databaseURL: "https://shark-tank-5caif-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "shark-tank-5caif",
+      storageBucket: "shark-tank-5caif.appspot.com",
+      messagingSenderId: "10768385786",
+      appId: "1:10768385786:web:9775abe80e709bf1deab43"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    window.firebaseDB = db;
+    window.firebaseRefs = { ref, get, push, onValue, serverTimestamp, set };
+  </script>
+
+  <script src="script.js"></script>
+</body>
+</html>

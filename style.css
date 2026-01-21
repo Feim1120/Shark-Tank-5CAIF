@@ -1,0 +1,400 @@
+:root {
+  --bg: #0d1117;
+  --card: #161b22;
+  --text: #e6edf3;
+  --text-light: #8b949e;
+  --accent: #58a6ff;
+  --accent-dark: #388bfd;
+  --green: #3fb950;
+  --red: #f85149;
+  --border: #30363d;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  padding: 1rem;
+}
+
+.login-container {
+  max-width: 400px;
+  margin: 10% auto;
+  padding: 2rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.login-container label {
+  display: block;
+  margin: 1rem 0 0.4rem;
+  font-weight: 500;
+}
+
+.login-container select,
+.login-container input {
+  width: 100%;
+  padding: 0.8rem;
+  background: #0d1117;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+#login-button {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.9rem;
+  margin-top: 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: 600;
+}
+
+#login-button:hover {
+  background: var(--accent-dark);
+}
+
+header {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  background: #010409;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+#logout-button, #freeze-button {
+  position: absolute;
+  top: 1.2rem;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  color: white;
+}
+
+#logout-button {
+  right: 1.5rem;
+  background: var(--red);
+}
+
+#logout-button:hover { background: #da1e28; }
+
+#freeze-button {
+  right: 9rem;
+  background: #dc2626;
+}
+
+#freeze-button:hover { background: #b91c1c; }
+
+h1 {
+  font-size: 2.4rem;
+  margin-bottom: 0.6rem;
+}
+
+.stats-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.8rem 2.5rem;
+  font-size: 1.15rem;
+  margin-top: 1rem;
+}
+
+.user-capital {
+  background: #1f2a44;
+  padding: 0.8rem 1.4rem;
+  border-radius: 10px;
+  border: 1px solid #3b82f6;
+  font-weight: 600;
+}
+
+.user-capital strong {
+  color: #60a5fa;
+  font-size: 1.25em;
+}
+
+.total-market, .last-investment {
+  background: var(--card);
+  padding: 0.8rem 1.4rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+main {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 1.5rem;
+  max-width: 1600px;
+  margin: 1.5rem auto;
+}
+
+#company-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.2rem;
+}
+
+.company-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.18s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.company-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+  border-color: var(--accent);
+}
+
+.company-card.fully-funded {
+  opacity: 0.65;
+  filter: grayscale(0.6);
+  pointer-events: none;
+}
+
+.company-logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin: 12px auto 0;
+  display: block;
+}
+
+.card-body {
+  padding: 1.2rem;
+  text-align: center;
+}
+
+.card-body h3 {
+  margin: 0.8rem 0 0.4rem;
+  font-size: 1.35rem;
+}
+
+.members {
+  font-size: 0.9em;
+  color: #94a3b8;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.funding-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  color: var(--text-light);
+  margin: 0.8rem 0 0.6rem;
+}
+
+.progress {
+  height: 12px;
+  background: #21262d;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  transition: width 0.6s ease;
+}
+
+.status {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.self-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--accent);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.invest-button {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.9rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 0.8rem;
+  width: 100%;
+  transition: all 0.2s;
+}
+
+.invest-button:hover {
+  background: var(--accent-dark);
+  transform: translateY(-2px);
+}
+
+.invest-button:disabled {
+  background: #444c56;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.ranking-box {
+  background: linear-gradient(135deg, #1e293b, #111827);
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 1.2rem;
+}
+
+.ranking-box h2 {
+  margin-bottom: 1rem;
+  color: #94a3b8;
+}
+
+#ranking-list {
+  counter-reset: rank;
+  padding-left: 0;
+}
+
+#ranking-list li {
+  list-style: none;
+  padding: 1rem 1.2rem;
+  margin: 0.7rem 0;
+  background: #0f172a;
+  border-radius: 10px;
+  border-left: 6px solid #475569;
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.4;
+  transition: all 0.15s;
+}
+
+#ranking-list li:hover {
+  transform: translateX(6px);
+  background: #1e293b;
+}
+
+#ranking-list li:nth-child(1) { border-left-color: #fbbf24; color: #fbbf24; font-size: 1.5rem; }
+#ranking-list li:nth-child(2) { border-left-color: #cbd5e1; color: #cbd5e1; }
+#ranking-list li:nth-child(3) { border-left-color: #cd7f32; color: #cd7f32; }
+
+#ranking-list li:nth-child(n+4) {
+  font-size: 1.15rem;
+  opacity: 0.9;
+}
+
+#investment-log {
+  list-style: none;
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+#investment-log li {
+  padding: 0.5rem 0;
+  font-size: 0.95rem;
+  border-bottom: 1px solid #21262d;
+  color: var(--text-light);
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #0d1117;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 460px;
+  padding: 2rem;
+}
+
+.modal-content h2 {
+  margin-bottom: 1.4rem;
+}
+
+.modal-content label {
+  display: block;
+  margin: 1rem 0 0.4rem;
+  font-weight: 500;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 0.8rem;
+  background: #161b22;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.investor-info, .remaining-info {
+  margin: 0.8rem 0;
+  font-size: 1.05rem;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.modal-buttons button {
+  flex: 1;
+  padding: 0.9rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  cursor: pointer;
+}
+
+#btn-confirm {
+  background: var(--green);
+  color: white;
+}
+
+#btn-cancel {
+  background: #444c56;
+  color: var(--text);
+}
+
+.error-message {
+  color: var(--red);
+  min-height: 1.4em;
+  margin-top: 0.6rem;
+}
